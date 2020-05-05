@@ -1,11 +1,14 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+from qibullet import SimulationManager
 import os
 import time
 import pybullet
+import pybullet_data
 from qibullet.tools import *
 from qibullet.laser import *
+from sonar import Sonar
 from qibullet.camera import *
 from qibullet.base_controller import *
 from qibullet.robot_posture import PepperPosture
@@ -53,6 +56,7 @@ class PepperVirtual(RobotVirtual):
         fingers and thumbs of a hand won't autocollide with the corresponding
         wrist). Add the cameras. Add motion constraint.
         """
+        print("##JE SUIS DANS LOAD ROBOT")
         pybullet.setAdditionalSearchPath(
             os.path.dirname(os.path.realpath(__file__)),
             physicsClientId=physicsClientId)
@@ -132,6 +136,11 @@ class PepperVirtual(RobotVirtual):
             physicsClientId=self.physics_client)
 
         self.laser_manager = Laser(
+            self.robot_model,
+            self.link_dict["Tibia"].getIndex(),
+            physicsClientId=self.physics_client)
+
+        self.sonar_manager = Sonar(
             self.robot_model,
             self.link_dict["Tibia"].getIndex(),
             physicsClientId=self.physics_client)
@@ -368,20 +377,21 @@ class PepperVirtual(RobotVirtual):
         laser scan process: note that you need the laser scan to be enabled to
         successfully retrieve laser data
         """
-        self.laser_manager.subscribe()
+        self.sonar_manager.subscribe()
 
     def unsubscribeLaser(self):
         """
         Unsubscribe from the robot's lasers. Calling this method will stop the
         laser scan process
         """
-        self.laser_manager.unsubscribe()
+        self.sonar_manager.unsubscribe()
 
     def showLaser(self, display):
         """
         Display debug lines that simulate the laser
         """
-        self.laser_manager.showLaser(display)
+        print("ici")
+        self.sonar_manager.showSonar(display)
 
     def getFrontLaserValue(self):
         """
@@ -400,6 +410,7 @@ class PepperVirtual(RobotVirtual):
         Return a list of the left laser value (clockwise)
         """
         return self.laser_manager.getLeftLaserValue()
+
 
     def isSelfColliding(self, link_names):
         """
@@ -471,3 +482,18 @@ class PepperVirtual(RobotVirtual):
                 finger_values.append((value * multiplier) + offset)
 
         return finger_names, finger_values
+
+
+if __name__ == "__main__":
+    simulation_manager = SimulationManager()
+    client = simulation_manager.launchSimulation(gui=True)
+    pepper = simulation_manager.spawnPepper(client, spawn_ground_plane=True)
+
+    pybullet.setAdditionalSearchPath(pybullet_data.getDataPath())
+
+    print("ON LANCE LES MÉTHODES SHOWLASER ET SUSBSCRIBELASER")
+    pepper.showLaser(True)
+    pepper.subscribeLaser()
+    print("ON A FINIT")
+    time.sleep(100)
+
