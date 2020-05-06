@@ -4,4 +4,8 @@
 * [Script launching multiple simulation instances](multi_simulation.py)
 * [Script using several simulation instances to compute the error on the joint positions](pepper_joints_error.py)
 * [Basic usage of the PepperRosWrapper class (bridge between qibullet and ROS)](pepper_ros_test.py)
-* [Script allowing a simulated model to mimic a real robot's movements](pepper_shadowing.py)
+* [Script allowing a simulated model to mimic a real robot's movements](pepper_shadowing.py)  
+
+Contributing PaulBx:
+* [Basic usage of the Bumper Class on a virtual pepper robot](pepper_bumper.py)
+* [Basic usage of the Sonar Class on a virtual pepper robot](pepper_sonar.py)
