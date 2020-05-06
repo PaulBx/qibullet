@@ -18,8 +18,8 @@ SONAR_POSITION = [
     [-0.07180, 0, -0.05340],  # Back sonar
 ]
 ANGLE_LIST_POSITION = [
-    math.radians(SONAR_ANGLE/2),  # Front laser
-    math.radians(SONAR_ANGLE/2) + math.pi,  # Back laser
+    math.radians(SONAR_ANGLE/2),  # Front sonar
+    math.radians(SONAR_ANGLE/2) + math.pi,  # Back sonar
 ]
 
 NUM_SONAR = len(SONAR_POSITION)
@@ -28,7 +28,7 @@ SONAR_FRAMERATE = 42000 # frequency 42kHz
 
 class Sonar:
     """
-    Class representing a virtual laser
+    Class representing a virtual sonar
     """
     _instances = set()
 
@@ -43,11 +43,11 @@ class Sonar:
 
         Parameters:
             robot_model - The pybullet model of the robot.
-            laser_id - The id of the link (Link type)
-            onto which the Lasers' are attached.
+            sonar_id - The id of the link (Link type)
+            onto which the sonars' are attached.
             physicsClientId - The id of the simulated instance in which the
-            lasers are to be spawned
-            display - boolean that allow the display of the laser
+            sonars are to be spawned
+            display - boolean that allow the display of the sonar
         """
         self.robot_model = robot_model
         self.physics_client = physicsClientId
@@ -87,7 +87,7 @@ class Sonar:
         Returns:
             boolean - True if the sonars are subscribed, false otherwise
         """
-        return self.laser_thread.isAlive()
+        return self.sonar_thread.isAlive()
 
     def subscribe(self):
         """
@@ -121,7 +121,7 @@ class Sonar:
         """
         Return a list of the front sonar value (clockwise)
         """
-        return self.laser_value[:NUM_RAY]
+        return self.sonar_value[:NUM_RAY]
 
     def getBackSonarValue(self):
         """
@@ -167,7 +167,7 @@ class Sonar:
                     parentLinkIndex=self.sonar_id,
                     physicsClientId=self.physics_client)
 
-                for i in range(NUM_RAY*len(SONAR_LIST_POSITION)):
+                for i in range(NUM_RAY*len(ANGLE_LIST_POSITION)):
                     hitObjectUid = results[i][0]
                     hitFraction = results[i][2]
                     hitPosition = results[i][3]
@@ -211,9 +211,9 @@ class Sonar:
     def _createDebugLine(self):
         """
         INTERNAL METHOD, create all debug lines needed for simulating the
-        lasers
+        sonars
         """
-        for i in range(NUM_RAY * NUM_LASER):
+        for i in range(NUM_RAY * NUM_SONAR):
             self.ray_ids.append(pybullet.addUserDebugLine(
                 self.ray_from[i],
                 self.ray_to[i],
@@ -233,7 +233,7 @@ class Sonar:
 
     def _terminateScan(self):
         """
-        INTERNAL METHOD, called when unsubscribing from the active laser, when
+        INTERNAL METHOD, called when unsubscribing from the active sonar, when
         Python is exitted or when the SimulationManager resets/stops a
         simulation instance
         """

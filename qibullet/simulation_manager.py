@@ -6,8 +6,6 @@ import pybullet
 import threading
 import pybullet_data
 from qibullet.laser import Laser
-from qibullet.sonar import Sonar
-from qibullet.bumper import bumper
 from qibullet.camera import Camera
 from qibullet.pepper_virtual import PepperVirtual
 from qibullet.base_controller import BaseController
@@ -101,7 +99,7 @@ class SimulationManager:
             pepper - A PepperVirtual object, the Pepper simulated instance
         """
         pepper = PepperVirtual()
-	print("##CREATION ROBOT##")
+        print("##CREATION ROBOT##")
         if spawn_ground_plane:
             pybullet.setAdditionalSearchPath(pybullet_data.getDataPath())
             pybullet.loadMJCF(

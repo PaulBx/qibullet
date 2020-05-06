@@ -1,14 +1,13 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-from qibullet import SimulationManager
 import os
 import time
 import pybullet
 import pybullet_data
 from qibullet.tools import *
 from qibullet.laser import *
-from sonar import Sonar
+from qibullet.sonar import Sonar
 from qibullet.camera import *
 from qibullet.base_controller import *
 from qibullet.robot_posture import PepperPosture
@@ -377,21 +376,21 @@ class PepperVirtual(RobotVirtual):
         laser scan process: note that you need the laser scan to be enabled to
         successfully retrieve laser data
         """
-        self.sonar_manager.subscribe()
+        self.laser_manager.subscribe()
 
     def unsubscribeLaser(self):
         """
         Unsubscribe from the robot's lasers. Calling this method will stop the
         laser scan process
         """
-        self.sonar_manager.unsubscribe()
+        self.laser_manager.unsubscribe()
 
     def showLaser(self, display):
         """
         Display debug lines that simulate the laser
         """
         print("ici")
-        self.sonar_manager.showSonar(display)
+        self.laser_manager.showSonar(display)
 
     def getFrontLaserValue(self):
         """
@@ -410,6 +409,41 @@ class PepperVirtual(RobotVirtual):
         Return a list of the left laser value (clockwise)
         """
         return self.laser_manager.getLeftLaserValue()
+
+
+    def subscribeSonar(self):
+        """
+        Subscribe to the robot's lasers. Calling this method will launch the
+        laser scan process: note that you need the laser scan to be enabled to
+        successfully retrieve laser data
+        """
+        self.sonar_manager.subscribe()
+
+    def unsubscribeSonar(self):
+        """
+        Unsubscribe from the robot's lasers. Calling this method will stop the
+        laser scan process
+        """
+        self.sonar_manager.unsubscribe()
+
+    def showSonar(self, display):
+        """
+        Display debug lines that simulate the laser
+        """
+        print("ici")
+        self.sonar_manager.showSonar(display)
+
+    def getFrontSonarValue(self):
+        """
+        Return a list of the front laser value (clockwise)
+        """
+        return self.sonar_manager.getFrontLaserValue()
+
+    def getBackSonarValue(self):
+        """
+        Return a list of the right laser value (clockwise)
+        """
+        return self.sonar_manager.getRightLaserValue()
 
 
     def isSelfColliding(self, link_names):
