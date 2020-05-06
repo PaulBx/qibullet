@@ -8,6 +8,7 @@ import pybullet_data
 from qibullet.tools import *
 from qibullet.laser import *
 from qibullet.sonar import Sonar
+from qibullet.bumper import Bumper
 from qibullet.camera import *
 from qibullet.base_controller import *
 from qibullet.robot_posture import PepperPosture
@@ -140,6 +141,11 @@ class PepperVirtual(RobotVirtual):
             physicsClientId=self.physics_client)
 
         self.sonar_manager = Sonar(
+            self.robot_model,
+            self.link_dict["Tibia"].getIndex(),
+            physicsClientId=self.physics_client)
+
+        self.bumper_manager = Bumper(
             self.robot_model,
             self.link_dict["Tibia"].getIndex(),
             physicsClientId=self.physics_client)
@@ -437,13 +443,53 @@ class PepperVirtual(RobotVirtual):
         """
         Return a list of the front laser value (clockwise)
         """
-        return self.sonar_manager.getFrontLaserValue()
+        return self.sonar_manager.getFrontSonarValue()
 
     def getBackSonarValue(self):
         """
         Return a list of the right laser value (clockwise)
         """
-        return self.sonar_manager.getRightLaserValue()
+        return self.sonar_manager.getBackSonarValue()
+
+
+    def subscribeBumper(self):
+        """
+        Subscribe to the robot's bumpers. Calling this method will launch the
+        bumper scan process: note that you need the bumper scan to be enabled to
+        successfully retrieve laser data
+        """
+        self.bumper_manager.subscribe()
+
+    def unsubscribeBumper(self):
+        """
+        Unsubscribe from the robot's bumpers. Calling this method will stop the
+        bumper scan process
+        """
+        self.bumper_manager.unsubscribe()
+
+    def showBumper(self, display):
+        """
+        Display debug lines that simulate the bumper
+        """
+        self.bumper_manager.showBumper(display)
+
+    def getRightFrontBumperValue(self):
+        """
+        Return a list of the right front bumper value (clockwise)
+        """
+        return self.bumper_manager.getRightFrontBumperValue()
+
+    def getLeftFrontBumperValue(self):
+        """
+        Return a list of the left front bumper value (clockwise)
+        """
+        return self.bumper_manager.getLeftFrontBumperValue()
+
+    def getBackBumperValue(self):
+        """
+        Return a list of the back bumper value (clockwise)
+        """
+        return self.bumper_manager.getBackBumperValue()
 
 
     def isSelfColliding(self, link_names):
